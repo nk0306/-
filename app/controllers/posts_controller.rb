@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   # GET /posts
@@ -21,24 +22,24 @@ class PostsController < ApplicationController
 
   # POST /posts
   def create
-    @post = Post.new(post_params)
+    @post = current_user.posts.new(post_params)
 
-    if @post.save
-      redirect_to @post, notice: 'Post was successfully created.'
+     if @post.save
+      @status = true
     else
-      render :new
+      @status = false
     end
   end
 
   # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
-      redirect_to @post, notice: 'Post was successfully updated.'
+     @status = true
     else
-      render :edit
+     @status = false
     end
   end
-
+  
   # DELETE /posts/1
   def destroy
     @post.destroy
@@ -48,7 +49,8 @@ class PostsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
-      @post = Post.find(params[:id])
+      @post = current_user.posts.find_by(id: params[:id])
+   redirect_to(posts_url, alert: "ERROR!!") if @post.blank?
     end
 
     # Only allow a trusted parameter "white list" through.
