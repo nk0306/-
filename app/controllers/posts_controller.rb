@@ -29,6 +29,7 @@ class PostsController < ApplicationController
     else
       @status = false
     end
+    redirect_to posts_url
   end
 
   # PATCH/PUT /posts/1
@@ -38,6 +39,7 @@ class PostsController < ApplicationController
     else
      @status = false
     end
+    redirect_to posts_url
   end
   
   # DELETE /posts/1
